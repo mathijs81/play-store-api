@@ -9,8 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-class OkHttpClientAdapter extends HttpClientAdapter {
-
+public class OkHttpClientAdapter extends HttpClientAdapter {
     OkHttpClient client;
 
     public OkHttpClientAdapter() {
@@ -103,7 +102,7 @@ class OkHttpClientAdapter extends HttpClientAdapter {
         if (code >= 400) {
             GooglePlayException e = new GooglePlayException("Malformed request", code);
             if (code == 401 || code == 403) {
-                e = new AuthException("Auth error", code);
+                e = new AuthException("Auth error: " + new String(content), code);
                 Map<String, String> authResponse = GooglePlayAPI.parseResponse(new String(content));
                 if (authResponse.containsKey("Error") && authResponse.get("Error").equals("NeedsBrowser")) {
                     ((AuthException) e).setTwoFactorUrl(authResponse.get("Url"));
